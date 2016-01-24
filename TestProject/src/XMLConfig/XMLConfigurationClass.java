@@ -9,6 +9,21 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/*
+public class ClassicSingleton {
+
+	   private static ClassicSingleton instance = null;
+	   private ClassicSingleton() {
+	      // Exists only to defeat instantiation.
+	   }
+	   public static ClassicSingleton getInstance() {
+	      if(instance == null) {
+	         instance = new ClassicSingleton();
+	      }
+	      return instance;
+	   }
+	}
+*/
 public class XMLConfigurationClass {
     public Boolean EnableSeleniumLog;
     public String TimestampFormat;
@@ -81,9 +96,16 @@ public class XMLConfigurationClass {
     public Boolean FunctionTrace_DisplayNullInputs;
     public String ExceptionMessageBuffer = "";
         
-    public XMLConfigurationClass() {
-    	//ParseXML();
-    }
+    private static XMLConfigurationClass instance = null;
+    public static XMLConfigurationClass Instance() {
+      if(instance == null) {
+         instance = new XMLConfigurationClass();
+      }
+      return instance;
+	}
+    //public XMLConfigurationClass() {
+    //	//ParseXML();
+    //}
     private Boolean TrueOrFalse(String tagname, String val) {
         try {
             if ((val.toLowerCase().equals("true")) || (val.toLowerCase().equals("yes")))

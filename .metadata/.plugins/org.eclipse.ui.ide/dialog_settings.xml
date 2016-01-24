@@ -12,6 +12,7 @@
 		<item value="false" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
 		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="C:\GitHub\SeleniumLog JAVA Extension"/>
 			<item value="C:\Users\Joseph\Eclipse_workspace_2\TestProject"/>
 			<item value="C:\Users\Joseph\Eclipse_workspace"/>
 		</list>

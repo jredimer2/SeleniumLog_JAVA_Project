@@ -100,14 +100,14 @@ public class ExampleInstantiationsTest {
         log.WriteLine("line 22");
         log.WriteLine("line 23");
         log.WriteLine("line 24");
-        log.WriteLine("line 25");
+        log.Pass().WriteLine("line 25");
         log.WriteLine("line 26");
         log.WriteLine("line 27");
         log.WriteLine("line 28");
         log.SaveIndent("id"); //
         log.Indent();
         log.WriteLine("line 29");
-        log.WriteLine("line 30");
+        log.Warning().WriteLine("line 30");
         log.WriteLine("line 31");
         log.WriteLine("line 32");
         log.WriteLine("line 33");
@@ -125,13 +125,13 @@ public class ExampleInstantiationsTest {
         log.Indent().WriteLine("line 44");
         log.Indent().WriteLine("line 45");
         log.WriteLine("line 46");
-        log.WriteLine("line 47");
+        log.Fail().WriteLine("line 47");
         log.Indent();
         log.WriteLine("line 48");
         log.WriteLine("line 49");
         log.WriteLine("line 50");
         log.WriteLine("line 51");
-        log.WriteLine("line 52");
+        log.Error().WriteLine("line 52");
         log.WriteLine("line 53");
         log.WriteLine("line 54");
         log.WriteLine("line 55");
@@ -326,13 +326,13 @@ public class ExampleInstantiationsTest {
     
     public static void main(String[] args) throws ParseException {
     	
-    	//TestIndents();
+    	TestIndents2();
     	//TestColors();
     	//TestSeleniumWebdriverIntegration();
     	//TestScreenshots();
     	//TestSeleniumLogEventListener();
     	//TestSingleton();
-    	TestXPathDiagnostics();
+    	//TestXPathDiagnostics();
     	
     	/*
         FirefoxDriver driver0 = new FirefoxDriver();

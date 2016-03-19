@@ -13,6 +13,7 @@ import org.xml.sax.SAXException;
 public final class XmlConfigurationClass {
     
     public boolean EnableSeleniumLog;
+    public boolean RichTextOutput;
     public String TimestampFormat;
     public String LogFilePath;
     public boolean WriteLineNumbers;
@@ -175,6 +176,10 @@ public final class XmlConfigurationClass {
                                     EnableSeleniumLog = TrueOrFalse("Enable SeleniumLog", val);
                                     break;
 
+                                case "Rich text output":
+                                    RichTextOutput = TrueOrFalse("Rich text output", val);
+                                    break;
+                                    
                                 case "Timestamp format":
                                     TimestampFormat = val;
                                     break;

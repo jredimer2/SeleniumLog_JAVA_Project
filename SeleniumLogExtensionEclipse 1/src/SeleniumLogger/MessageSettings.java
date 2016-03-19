@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Stack;
 
+import XMLConfig.XmlConfigurationClass;
+
 public class MessageSettings
 {
     public boolean ShowLineNumbers;
@@ -35,6 +37,9 @@ public class MessageSettings
     public String FormattingStr;
     public IndentModel indentModel = new IndentModel();
     public boolean EnableLogging;
+    public String Padding;
+    public String pad;
+    public String MessageType;
     
     private final int _PrevLineNum;
     private final int _RunningIndentLevel;
@@ -53,6 +58,9 @@ public class MessageSettings
         _RunningIndentLevel = 0;
         //Indent = 0;
         //Unindent = 0;
+        Padding = "";
+        pad = "   ";
+        MessageType = "";
         ResetDefaultValues();
         EnableLogging = true;
     }
@@ -155,8 +163,12 @@ public class MessageSettings
     {
         Stack MessageStack = new Stack();
         String ReturnString = "";
+        String ReturnString2 = "";
+        String MessageString2 = "";
+        String SimpleMessageType = "INFO";
         String PathString = "";
         String FormattingString = "";
+        XmlConfigurationClass config = XmlConfigurationClass.Instance();
 
         // Step 1: Write flags
         if (WatchdogStart == true)
@@ -175,24 +187,28 @@ public class MessageSettings
         {
             MessageStack.push("PASS");
             Pass = false;
+            SimpleMessageType = "PASS";
         }
 
         if (Fail == true)
         {
             MessageStack.push("FAIL");
             Fail = false;
+            SimpleMessageType = "FAIL";
         }
 
         if (Warning == true)
         {
             MessageStack.push("WARNING");
             Warning = false;
+            SimpleMessageType = "WARNING";
         }
 
         if (Error == true)
         {
             MessageStack.push("ERROR");
             Error = false;
+            SimpleMessageType = "ERROR";
         }
 
         if (Indent > 0)
@@ -288,12 +304,27 @@ public class MessageSettings
         {
             ReturnString = "<" + FormattingString + ";TIMESTAMP:" + df.format(new Date()) + ">" + MessageStr;
         }
+        
+        MessageString2 = MessageStr;
 
         ResetDefaultValues();
 
         if (EnableLogging) indentModel.SimulateIndentations(ReturnString);
-        //Console.WriteLine("FORMAT_STR: indentModel.CurrentLevel = " + indentModel.CurrentLevel);
-        return ReturnString;
+
+        if (!config.RichTextOutput)
+        {
+            for (int i = 0; i < indentModel.getCurrentLevel(); i++)
+            {
+                Padding = Padding + pad;
+            }
+            ReturnString2 = df.format(new Date()) + "	|	" + SimpleMessageType + "	| " + Padding + MessageString2;
+            Padding = "";
+            return ReturnString2;
+        }
+        else
+        {
+            return ReturnString;
+        }
     }
 
 }

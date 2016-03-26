@@ -3,6 +3,10 @@ package XMLConfig;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import javax.swing.JOptionPane;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.*;
@@ -170,7 +174,7 @@ public final class XmlConfigurationClass {
                         if ((attrs != null) && (attrs.getLength() > 0)) {
                             String attr = attrs.item(0).getNodeValue();
                             String val = aNode.getFirstChild().getNodeValue();
-                            System.out.println(aNode.getNodeName() + ", ATTRIB [" + attr + "]");
+                            //System.out.println(aNode.getNodeName() + ", ATTRIB [" + attr + "]");
                             switch (attr) {
                                 case "Enable SeleniumLog":
                                     EnableSeleniumLog = TrueOrFalse("Enable SeleniumLog", val);
@@ -185,7 +189,14 @@ public final class XmlConfigurationClass {
                                     break;
 
                                 case "Log file path":
-                                    LogFilePath = val;
+                                	Path p = Paths.get(val);
+                                	File d = new File(p.getParent().toString());
+                                	if (!d.exists()) 
+                                	{                            	
+                                		JOptionPane.showMessageDialog(null, "ERROR: Log file path '" + val + "' folder does not exist or you do not have write permission. Exiting. Please update SeleniumgLog.config file's 'Log file path' property with a folder path that exists.");
+                                		throw new Exception("ERROR: Log file path '" + val + "' folder does not exist or you do not have write permission. Exiting. Please update SeleniumgLog.config file's 'Log file path' property with a folder path that exists.");
+                                	}
+                                	LogFilePath = val;
                                     break;
 
                                 case "Write line numbers":
@@ -193,15 +204,22 @@ public final class XmlConfigurationClass {
                                     break;
 
 
-                                case "Auto-launch SeleniumLog Desktop":
-                                    AutoLaunchSeleniumLogDesktop = TrueOrFalse("Auto-launch SeleniumLog Desktop", val);
+                                case "Auto-launch SeleniumLog Viewer":
+                                    AutoLaunchSeleniumLogDesktop = TrueOrFalse("Auto-launch SeleniumLog Viewer", val);
                                     break;
 
-                                case "SeleniumLog Desktop Installation Folder":
+                                case "SeleniumLog Viewer Installation Folder":
                                     SeleniumLogAppInstallationFolder = val;
                                     break;
 
                                 case "Screenshots folder":
+                                	Path p = Paths.get(val);
+                                	File d = new File(p.getParent().toString());
+                                	if (!d.exists()) 
+                                	{                            	
+                                		JOptionPane.showMessageDialog(null, "ERROR: Screenshots folder '" + val + "' folder does not exist or you do not have write permission. Exiting. Please update SeleniumgLog.config file's 'Log file path' property with a folder path that exists.");
+                                		throw new Exception("ERROR: Screenshots folder '" + val + "' folder does not exist or you do not have write permission. Exiting. Please update SeleniumgLog.config file's 'Log file path' property with a folder path that exists.");
+                                	}
                                     ScreenshotsFolder = val;
                                     break;
 

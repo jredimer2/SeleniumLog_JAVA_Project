@@ -95,7 +95,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             {
                 //log.SaveIndent("OnNavigating");
                 log.Indent();
-                log.Orange().WriteLine("Navigating To: " + string, log.Config.OnNavigating_TakeScreenshotBeforeEvent);
+                log.WriteLine("[Selenium Event]  Navigating To: " + string, log.Config.OnNavigating_TakeScreenshotBeforeEvent);
                 //log.RestoreIndent("OnNavigating");
                 log.Unindent();
             }
@@ -108,7 +108,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             {
                 //log.SaveIndent("OnNavigated");
                 log.Indent();
-                log.Pass().Green().WriteLine("... Navigation Success!", log.Config.OnNavigating_TakeScreenshotBeforeEvent);
+                log.WriteLine("[Selenium Event]  Navigation Success!", log.Config.OnNavigating_TakeScreenshotBeforeEvent);
                 //log.RestoreIndent("OnNavigated");
                 log.Unindent();
             }
@@ -120,7 +120,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnNavigatingBack_LogBeforeEvent)
             {
                 log.Indent();
-                log.Orange().WriteLine("Navigating Back from: " + wd.getCurrentUrl(), log.Config.OnNavigatingBack_TakeScreenshotBeforeEvent);
+                log.WriteLine("[Selenium Event]  Navigating Back from: " + wd.getCurrentUrl(), log.Config.OnNavigatingBack_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -131,7 +131,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnNavigatingBack_LogAfterEvent)
             {
                 log.Indent();
-                log.Pass().Green().WriteLine("... Navigate Back Success!", log.Config.OnNavigatingBack_TakeScreenshotAfterEvent);
+                log.WriteLine("[Selenium Event]  Navigate Back Success!", log.Config.OnNavigatingBack_TakeScreenshotAfterEvent);
                 log.Unindent();
             }
         }
@@ -142,7 +142,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnNavigatingForward_LogBeforeEvent)
             {
                 log.Indent();
-                log.Orange().WriteLine("Navigating Forward from: " + wd.getCurrentUrl(), log.Config.OnNavigatingForward_TakeScreenshotBeforeEvent);
+                log.WriteLine("[Selenium Event]  Navigating Forward from: " + wd.getCurrentUrl(), log.Config.OnNavigatingForward_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -153,7 +153,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnNavigatingForward_LogAfterEvent)
             {
                 log.Indent();
-                log.Pass().Green().WriteLine("... Navigate Forward Success!", log.Config.OnNavigatingForward_TakeScreenshotAfterEvent);
+                log.WriteLine("[Selenium Event]  Navigate Forward Success!", log.Config.OnNavigatingForward_TakeScreenshotAfterEvent);
                 log.Unindent();
             }
         }
@@ -169,7 +169,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnFindElement_LogBeforeEvent)
             {
                 log.Indent();
-                log.Orange().WriteLine("Finding Element: " + by.toString(), log.Config.OnFindElement_TakeScreenshotBeforeEvent);
+                log.WriteLine("[Selenium Event]  Finding Element: " + by.toString(), log.Config.OnFindElement_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -180,7 +180,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnFindElement_LogAfterEvent)
             {
                 log.Indent();
-                log.Pass().Green().WriteLine("... Element Found!", log.Config.OnFindElement_TakeScreenshotAfterEvent);
+                log.WriteLine("[Selenium Event]  Element Found!", log.Config.OnFindElement_TakeScreenshotAfterEvent);
                 log.Unindent();
             }
         }
@@ -191,7 +191,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnClick_LogBeforeEvent)
             {
                 log.Indent();
-                log.Orange().WriteLine("Clicking Element: " + _by + " " + _locator, log.Config.OnClick_TakeScreenshotBeforeEvent);
+                log.WriteLine("[Selenium Event]  Clicking Element: " + _by + " " + _locator, log.Config.OnClick_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -202,7 +202,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnClick_LogAfterEvent)
             {
                 log.Indent();
-                log.Pass().Green().WriteLine("... Click Success!", log.Config.OnClick_TakeScreenshotAfterEvent);
+                log.WriteLine("[Selenium Event]  Click Success!", log.Config.OnClick_TakeScreenshotAfterEvent);
                 log.Unindent();
             }
         }
@@ -214,10 +214,10 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             {
                 log.SaveIndent("OnElementValueChanging");
                 log.Indent();
-                log.Orange().WriteLine("Changing value ...");
+                log.WriteLine("[Selenium Event]  Changing value ...");
                 if ((_keyInput != null) && !_keyInput.isEmpty())
                 {
-                    log.Orange().WriteLine(" [" + _keyInput + "]", log.Config.OnChangeValue_TakeScreenshotBeforeEvent);
+                    log.WriteLine(" [" + _keyInput + "]", log.Config.OnChangeValue_TakeScreenshotBeforeEvent);
                 }
                 log.RestoreIndent("OnElementValueChanging");
             }
@@ -230,7 +230,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             {
                 log.SaveIndent("OnElementValueChanged");
                 log.Indent();
-                log.Pass().Green().WriteLine("... Successfully changed value [" + we.getAttribute("value") + "]", log.Config.OnChangeValue_TakeScreenshotAfterEvent);
+                log.WriteLine("[Selenium Event]  Successfully changed value [" + we.getAttribute("value") + "]", log.Config.OnChangeValue_TakeScreenshotAfterEvent);
                 log.Indent();
 
                 if ((_keyInput != null) && !_keyInput.isEmpty())
@@ -247,7 +247,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnScriptExecute_LogBeforeEvent)
             {
                 log.Indent();
-                log.Orange().WriteLine("Script Executing: " + string, log.Config.OnScriptExecute_TakeScreenshotBeforeEvent);
+                log.WriteLine("[Selenium Event]  Script Executing: " + string, log.Config.OnScriptExecute_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -258,7 +258,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnScriptExecute_LogAfterEvent)
             {
                 log.Indent();
-                log.Pass().Green().WriteLine("... Script Executed Successfully!", log.Config.OnScriptExecute_TakeScreenshotAfterEvent);
+                log.WriteLine("[Selenium Event]  Script Executed Successfully!", log.Config.OnScriptExecute_TakeScreenshotAfterEvent);
                 log.Unindent();
             }
         }
@@ -267,7 +267,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
         public void onException(Throwable thrwbl, WebDriver wd) {
             SeleniumLog log = SeleniumLog.Instance();
             log.Indent();
-            log.Red().WriteLine("Exception Thrown: " + thrwbl.getMessage(), true);
+            log.Error().Red().WriteLine("[Selenium Event]  Exception Thrown: " + thrwbl.getMessage(), true);
             if (log.Config.OnWebdriverExceptionThrown_LogEvent)
             {
                 if (_by.equals("xpath"))

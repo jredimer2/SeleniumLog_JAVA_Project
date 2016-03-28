@@ -326,11 +326,11 @@ public class ExampleInstantiationsTest {
     
     public static void main(String[] args) throws ParseException {
     	
-    	TestIndents2();
+    	//TestIndents2();
     	//TestColors();
     	//TestSeleniumWebdriverIntegration();
     	//TestScreenshots();
-    	//TestSeleniumLogEventListener();
+    	TestSeleniumLogEventListener();
     	//TestSingleton();
     	//TestXPathDiagnostics();
     	

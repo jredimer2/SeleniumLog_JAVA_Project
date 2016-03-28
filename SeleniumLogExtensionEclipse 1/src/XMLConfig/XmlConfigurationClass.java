@@ -213,9 +213,9 @@ public final class XmlConfigurationClass {
                                     break;
 
                                 case "Screenshots folder":
-                                	Path p = Paths.get(val);
-                                	File d = new File(p.getParent().toString());
-                                	if (!d.exists()) 
+                                	Path p2 = Paths.get(val);
+                                	File d2 = new File(p2.getParent().toString());
+                                	if (!d2.exists()) 
                                 	{                            	
                                 		JOptionPane.showMessageDialog(null, "ERROR: Screenshots folder '" + val + "' folder does not exist or you do not have write permission. Exiting. Please update SeleniumgLog.config file's 'Log file path' property with a folder path that exists.");
                                 		throw new Exception("ERROR: Screenshots folder '" + val + "' folder does not exist or you do not have write permission. Exiting. Please update SeleniumgLog.config file's 'Log file path' property with a folder path that exists.");

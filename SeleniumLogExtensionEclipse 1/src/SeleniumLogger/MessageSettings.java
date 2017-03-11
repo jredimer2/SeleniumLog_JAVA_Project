@@ -19,14 +19,16 @@ public class MessageSettings
     public boolean WatchdogStart;
     public boolean WatchdogEnd;
     public int LineNum;
+    public boolean Debug;
     public boolean Pass;
     public boolean Fail;
     public boolean Warning;
     public boolean Error;
+	public boolean Fatal;
     public int Indent;
     public int Unindent;
     public boolean Root;
-    public Color CRGB;
+    public Color RGB;
     public Color DefaultRGB;
     public String Image;
     public String File;
@@ -69,14 +71,16 @@ public class MessageSettings
     {
         WatchdogStart = false;
         WatchdogEnd = false;
+        Debug = false;
         Pass = false;
-        Fail = false;
+        Fail = false;        
         Warning = false;
         Error = false;
+		Fatal = false;
         Indent = 0;
         Unindent = 0;
         Root = false;
-        CRGB = null;
+        RGB = null;
         DefaultRGB = null;
         Image = null;
         File = null;
@@ -165,7 +169,7 @@ public class MessageSettings
         String ReturnString = "";
         String ReturnString2 = "";
         String MessageString2 = "";
-        String SimpleMessageType = "INFO";
+        String SimpleMessageType = "INFO ";
         String PathString = "";
         String FormattingString = "";
         XmlConfigurationClass config = XmlConfigurationClass.Instance();
@@ -183,25 +187,32 @@ public class MessageSettings
             Pass = false;
         }
 
+        if (Debug == true)
+        {
+            //MessageStack.Push("DEBUG");
+            Debug = false;
+            SimpleMessageType = "DEBUG";
+        }
+        
         if (Pass == true)
         {
             MessageStack.push("PASS");
             Pass = false;
-            SimpleMessageType = "PASS";
+            SimpleMessageType = "PASS ";
         }
 
         if (Fail == true)
         {
             MessageStack.push("FAIL");
             Fail = false;
-            SimpleMessageType = "FAIL";
+            SimpleMessageType = "FAIL ";
         }
 
         if (Warning == true)
         {
             MessageStack.push("WARNING");
             Warning = false;
-            SimpleMessageType = "WARNING";
+            SimpleMessageType = "WARN ";
         }
 
         if (Error == true)
@@ -211,6 +222,13 @@ public class MessageSettings
             SimpleMessageType = "ERROR";
         }
 
+		if (Fatal == true)
+		{
+			MessageStack.push("ERROR");
+			Fatal = false;
+			SimpleMessageType = "FATAL";
+		}
+				
         if (Indent > 0)
         {
             for (int i = 0; i < Indent; i++)
@@ -240,10 +258,10 @@ public class MessageSettings
             Root = false;
         }
 
-        if (CRGB != null)
+        if (RGB != null)
         {
-            MessageStack.push("RGB:" + CRGB.getRed() + "," + CRGB.getGreen() + "," + CRGB.getBlue());
-            CRGB = null;
+            MessageStack.push("RGB:" + RGB.getRed() + "," + RGB.getGreen() + "," + RGB.getBlue());
+            RGB = null;
         }
 
         if (DefaultRGB != null)

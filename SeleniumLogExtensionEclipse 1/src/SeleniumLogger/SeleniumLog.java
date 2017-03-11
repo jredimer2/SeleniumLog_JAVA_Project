@@ -9,7 +9,11 @@ package SeleniumLogger;
 /// <summary>
 
 import XMLConfig.XmlConfigurationClass;
+import java.awt.AWTException;
 import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -34,6 +38,8 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.TakesScreenshot;
+import org.apache.commons.io.FileUtils;
 
 /// This is the main class that the user instantiates.
 /// </summary>
@@ -58,7 +64,7 @@ public final class SeleniumLog {
     private int PendingIndentLevel() { return _MessageSettings.GetPendingLevel(); }
 
     private ArrayList<Integer> wdlist = new ArrayList<Integer>();
-    private WebDriver driver;
+    public WebDriver driver;
     //public _Config Config = new _Config();
     public XmlConfigurationClass Config = XmlConfigurationClass.Instance();
     
@@ -205,19 +211,15 @@ public final class SeleniumLog {
     /// Write msg string to file.
     /// </summary>
     /// <param name="msg"></param>
-    public void WriteLine(String msg, boolean take_screenshot)
+    private void WriteLine(String msg, boolean take_screenshot, boolean TakeScreenshots)
     {
         if (!_MessageSettings.EnableLogging) return;
         
-        if (Config.TakeScreenshotOnEveryWriteline)
+        if (TakeScreenshots)
         {
             Screenshot();
         }
-        else
-        {
-            if (take_screenshot)
-                Screenshot();
-        }
+
         int sleepTime = 50;
         _MessageSettings.MessageStr = msg;
         String StrToWrite = _MessageSettings.FormMessageString();
@@ -241,10 +243,167 @@ public final class SeleniumLog {
         }
     }
     
-    public void WriteLine(String msg) {
-        WriteLine(msg, false);
+    
+    //public void WriteLine(String msg) {
+    //    WriteLine(msg, false);
+    //}
+    
+
+    /// <summary>
+    /// Write msg string to file.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void WriteLine(String msg, boolean take_screenshot)
+    {
+        WriteLine(msg, take_screenshot, Config.TakeScreenshotOnEveryWriteline);
     }
     
+    /// <summary>
+    /// Write msg string to file.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Info(String msg)
+    {
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryInfo);
+    }
+
+    /// <summary>
+    /// Write msg string to file.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Info2(String msg)
+    {
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryInfo2);
+    }
+
+    /// <summary>
+    /// Write msg string to file.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Debug(String msg)
+    {
+        Debug();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryDebug);
+    }
+
+    public void Debug(String msg, boolean take_screenshot)
+    {
+        Debug();
+        WriteLine(msg, false, take_screenshot);
+    }
+    
+    /// <summary>
+    /// Write msg string to file.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Debug2(String msg)
+    {
+        Debug();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryDebug2);
+    }
+    /// <summary>
+    /// Write msg string to file.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Pass(String msg)
+    {
+        Pass();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryPass);
+    }
+    /// <summary>
+    /// Write msg string to file with a PASS icon.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Pass2(String msg)
+    {
+        Pass();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryPass2);
+    }
+
+    /// <summary>
+    /// Write msg string to file with a FAIL icon.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Fail(String msg)
+    {
+        Fail();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryFail);
+    }
+
+    /// <summary>
+    /// Write msg string to file with a FAIL icon.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Fail2(String msg)
+    {
+        Fail();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryFail2);
+    }
+
+    /// <summary>
+    /// Write msg string to filewith an ERROR icon.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Error(String msg)
+    {
+        Error();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryError);
+    }
+
+    /// <summary>
+    /// Write msg string to filewith an ERROR icon.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Error2(String msg)
+    {
+        Error();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryError2);
+    }
+
+
+    /// <summary>
+    /// Write msg string to filewith an ERROR icon.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Fatal(String msg)
+    {
+        Red().Fatal();
+        if (Config.RichTextOutput)
+            msg = "FATAL - " + msg;
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryFatal);
+    }
+
+    /// <summary>
+    /// Write msg string to filewith an ERROR icon.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Fatal2(String msg)
+    {
+        Red().Fatal();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryFatal2);
+    }
+    
+    /// <summary>
+    /// Write msg string to filewith a WARNING icon.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Warning(String msg)
+    {
+        Warning();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryWarning);
+    }
+
+    /// <summary>
+    /// Write msg string to filewith a WARNING icon.
+    /// </summary>
+    /// <param name="msg"></param>
+    public void Warning2(String msg)
+    {
+        Warning();
+        WriteLine(msg, false, Config.TakeScreenshotOnEveryWarning2);
+    }
+
+
     /// <summary>
     /// true - Display line numbers. false - turn off line numbers.
     /// </summary>
@@ -308,7 +467,7 @@ public final class SeleniumLog {
         if (WriteNow)
         {
             String StrToWrite = _MessageSettings.FormMessageString();
-            WriteLine(StrToWrite);
+            WriteLine(StrToWrite, false);
         }
     }
     
@@ -348,7 +507,7 @@ public final class SeleniumLog {
         if (WriteNow)
         {
             String StrToWrite = _MessageSettings.FormMessageString();
-            WriteLine(StrToWrite);
+            WriteLine(StrToWrite, false);
         }
     }
     
@@ -384,7 +543,7 @@ public final class SeleniumLog {
         if (WriteNow)
         {
             String StrToWrite = _MessageSettings.FormMessageString();
-            WriteLine(StrToWrite);
+            WriteLine(StrToWrite, false);
         }
     }
     
@@ -392,13 +551,13 @@ public final class SeleniumLog {
     /// Initiate watchdog feature.
     /// </summary>
     /// <returns></returns>
-    private SeleniumLog WatchdogStart()
+    public SeleniumLog WatchdogStart()
     {
         _MessageSettings.WatchdogStart = true;
         boolean containsItem = wdlist.contains(_MessageSettings.CurrentIndentLevel());
         if (containsItem)
         {
-            WriteLine(">>>>>>>>>> wdlist already contains this indentation level!");
+            WriteLine(">>>>>>>>>> wdlist already contains this indentation level!", false);
         }
         else
         {
@@ -412,13 +571,13 @@ public final class SeleniumLog {
     /// </summary>
     /// <param name="WriteNow">Set to true to write message buffer to the file now.</param>
     /// <returns></returns>
-    private SeleniumLog WatchdogStart(boolean WriteNow)
+    public SeleniumLog WatchdogStart(boolean WriteNow)
     {
         _MessageSettings.WatchdogStart = true;
         if (WriteNow)
         {
             String StrToWrite = _MessageSettings.FormMessageString();
-            WriteLine(StrToWrite);
+            WriteLine(StrToWrite, false);
             return null;
         }
         else
@@ -431,7 +590,7 @@ public final class SeleniumLog {
     /// Terminate current watchdog which was previously initiated by WatchdogStart.
     /// </summary>
     /// <returns></returns>
-    private SeleniumLog WatchdogEnd()
+    public SeleniumLog WatchdogEnd()
     {
         _MessageSettings.WatchdogEnd = true;
         boolean containsItem = wdlist.contains(_MessageSettings.CurrentIndentLevel());
@@ -450,14 +609,13 @@ public final class SeleniumLog {
     /// </summary>
     /// <param name="WriteNow">Set to true to write message buffer to the file now.</param>
     /// <returns>SeleniumLog object</returns>
-    private SeleniumLog WatchdogEnd(boolean WriteNow)
+    public SeleniumLog WatchdogEnd(boolean WriteNow)
     {
         _MessageSettings.WatchdogEnd = true;
         if (WriteNow)
         {
             String StrToWrite = _MessageSettings.FormMessageString();
-            //File.AppendAllText(_LogFilePath, StrToWrite + "\n");
-            WriteLine(StrToWrite);
+            WriteLine(StrToWrite, false);
             return null;
         }
         else
@@ -466,14 +624,24 @@ public final class SeleniumLog {
         }
     }
     
+
+    /// <summary>
+    /// Pass the step.
+    /// </summary>
+    /// <returns></returns>
+    public SeleniumLog Debug()
+    {
+        Gray();
+        _MessageSettings.Debug = true;
+        return this;
+    }
+
     /// <summary>
     /// Pass the step.
     /// </summary>
     /// <returns></returns>
     public SeleniumLog Pass()
     {
-        if (Config.TakeScreenshotOnEveryPass)
-            Screenshot();
         Green();
         _MessageSettings.Pass = true;
         return this;
@@ -485,8 +653,6 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Fail()
     {
-        if (Config.TakeScreenshotOnEveryFail)
-            Screenshot();
         Red();
         _MessageSettings.Fail = true;
         return this;
@@ -498,12 +664,9 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Warning()
     {
-        if (Config.TakeScreenshotOnEveryWarning)
-            Screenshot();
         _MessageSettings.Warning = true;
         return this;
     }
-
 
     /// <summary>
     /// Put an error icon on the step.
@@ -511,8 +674,16 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Error()
     {
-        if (Config.TakeScreenshotOnEveryError)
-            Screenshot();
+        _MessageSettings.Error = true;
+        return this;
+    }
+    
+    /// <summary>
+    /// Put an error icon on the step in red fonts with FATAL - prefix.
+    /// </summary>
+    /// <returns></returns>
+    public SeleniumLog Fatal()
+    {
         _MessageSettings.Error = true;
         return this;
     }
@@ -524,8 +695,8 @@ public final class SeleniumLog {
     /// <param name="green">between 0 - 255</param>
     /// <param name="blue">between 0 - 255</param>
     /// <returns></returns>
-    public SeleniumLog CRGB(int red, int green, int blue) {
-        _MessageSettings.CRGB = new Color(red, green, blue);
+   public SeleniumLog RGB(int red, int green, int blue) {
+        _MessageSettings.RGB = new Color(red, green, blue);	   
         return this;
     }
     
@@ -567,7 +738,7 @@ public final class SeleniumLog {
         if (WriteNow)
         {
             String StrToWrite = _MessageSettings.FormMessageString();
-            WriteLine(StrToWrite);
+            WriteLine(StrToWrite, false);
             return null;
         }
         else
@@ -598,7 +769,7 @@ public final class SeleniumLog {
         if (WriteNow)
         {
             String StrToWrite = _MessageSettings.FormMessageString();
-            WriteLine(StrToWrite);
+            WriteLine(StrToWrite, false);
             return null;
         }
         else
@@ -650,15 +821,16 @@ public final class SeleniumLog {
     {
         try {
             Thread.sleep(50);
-            WriteLine(msg);
+            WriteLine(msg, false);
         } catch (InterruptedException ex) { }
     }
+    
     
     public SeleniumLog Screenshot() {
         SeleniumLog res = null;
         try {
             res = Screenshot(null);
-        } catch (WebDriverException | IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(SeleniumLog.class.getName()).log(Level.SEVERE, null, ex);
         }
         return res;
@@ -668,7 +840,8 @@ public final class SeleniumLog {
     /// Pass the step.
     /// </summary>
     /// <returns></returns>
-    public SeleniumLog Screenshot(WebDriver _driver) throws WebDriverException, IOException
+    //public SeleniumLog Screenshot(WebDriver _driver) throws WebDriverException, IOException
+    public SeleniumLog Screenshot(WebDriver _driver) throws Exception
     {
         try
         {
@@ -685,141 +858,155 @@ public final class SeleniumLog {
             // user sets the config to true in the SeleniumLog.config, but has not set the Selenium Webdriver pointer.
             try
             {
-                String PICTURE_PATH = Config.ScreenshotsFolder + "/" + GetUniqueFilename("png");
-                File srcFile = ((TakesScreenshot)scrndriver).getScreenshotAs(OutputType.FILE);
-                Files.copy(srcFile.toPath(), (new File(PICTURE_PATH)).toPath(), REPLACE_EXISTING);
-                Files.delete(srcFile.toPath());
+                String PICTURE_PATH = Config.ScreenshotsFolder + "/" + GetUniqueFilename("jpg");
 
-                //byte[] ssb = ((TakesScreenshot)scrndriver).getScreenshotAs(OutputType.BYTES);
-                //BufferedImage bi = ImageIO.read(new ByteArrayInputStream(ssb));
-                //ImageIO.write(bi, "jpg", new File(PICTURE_PATH));
-                AttachPicture(PICTURE_PATH);
+                if (Config.UseFastScreenshot)
+                {
+                    TakeScreenshot(scrndriver, PICTURE_PATH);
+                }
+                else
+                {
+                	File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+                	FileUtils.copyFile(scrFile, new File(PICTURE_PATH));
+                }
                 _MessageSettings.Image = PICTURE_PATH;
             }
-            catch (WebDriverException | IOException e)
+            catch (WebDriverException | IOException | AWTException e)
             {
-                throw e;
+            	throw e;
             }
             return this;
         }
-        catch (WebDriverException | IOException e)
+        catch (WebDriverException | IOException | AWTException e)
         {
-            Error().WriteLine("NULL REFERENCE EXCEPTION");
+            Error(e.getMessage());
             throw e;
         }
     }
     
+    private void TakeScreenshot(WebDriver drv, String path) throws IOException, AWTException
+    { 
+    	Rectangle bounds = new Rectangle();
+    	org.openqa.selenium.Point loc = drv.manage().window().getPosition();
+    	org.openqa.selenium.Dimension dim = drv.manage().window().getSize();
+    	bounds.setBounds(loc.getX(), loc.getY(), dim.getWidth(), dim.getHeight());
+    	
+    		Robot robot = new Robot();
+            BufferedImage screenShot = robot.createScreenCapture(bounds);
+            ImageIO.write(screenShot, "JPG", new File(path));
+    }
+    
     public SeleniumLog Red() {
         if (Config.ScreenshotOnEveryMessage)
-            Screenshot().CRGB(255, 0, 0);
+            Screenshot().RGB(255, 0, 0);
         else
-            CRGB(255, 0, 0);
+            RGB(255, 0, 0);
         return this;
     }
     
     public void Red(String msg)
     {
-        Red().WriteLine(msg);
+        Red().WriteLine(msg, false);
     }
     
     public SeleniumLog Green() {
-        CRGB(0, 150, 0);
+        RGB(0, 150, 0);
         return this;
     }
     
     public void Green(String msg)
     {
-        Green().WriteLine(msg);
+        Green().WriteLine(msg, false);
     }
     
     public SeleniumLog Blue() {
-        CRGB(0, 0, 250);
+        RGB(0, 0, 255);
         return this;
     }
     
     public void Blue(String msg)
     {
-        Blue().WriteLine(msg);
+        Blue().WriteLine(msg, false);
     }
     
     public SeleniumLog Pink() {
-        CRGB(247, 91, 208);
+        RGB(247, 91, 208);
         return this;
     }
     
     public void Pink(String msg)
     {
-        Pink().WriteLine(msg);
+        Pink().WriteLine(msg, false);
     }
     
     public SeleniumLog Magenta() {
-        CRGB(233, 12, 177);
+        RGB(233, 12, 177);
         return this;
     }
     
     public void Magenta(String msg)
     {
-        Magenta().WriteLine(msg);
+        Magenta().WriteLine(msg, false);
     }
     
     public SeleniumLog Orange() {
-        CRGB(250, 97, 5);
+        RGB(250, 97, 5);
         return this;
     }
     
     public void Orange(String msg)
     {
-        Orange().WriteLine(msg);
+        Orange().WriteLine(msg, false);
     }
     
     public SeleniumLog Purple() {
-        CRGB(97, 0, 193);
+        RGB(97, 0, 193);
         return this;
     }
     
     public void Purple(String msg)
     {
-        Purple().WriteLine(msg);
+        Purple().WriteLine(msg, false);
     }
     
     public SeleniumLog Gray() {
-        CRGB(135, 135, 135);
+        RGB(135, 135, 135);
         return this;
     }
     
     public void Gray(String msg)
     {
-        Gray().WriteLine(msg);
+        Gray().WriteLine(msg, false);
     }
     
     public SeleniumLog BlueGreen() {
-        CRGB(13, 115, 71);
+        RGB(13, 115, 71);
         return this;
     }
     
     public void BlueGreen(String msg)
     {
-        BlueGreen().WriteLine(msg);
+        BlueGreen().WriteLine(msg, false);
     }
     
     public SeleniumLog Brown() {
-        CRGB(113, 0, 0);
+        RGB(113, 0, 0);
         return this;
     }
     
     public void Brown(String msg)
     {
-        Brown().WriteLine(msg);
+        Brown().WriteLine(msg, false);
     }
     
     public SeleniumLog Olive() {
-        CRGB(128, 128, 0);
+        RGB(128, 128, 0);
         return this;
     }
     
     public void Olive(String msg)
     {
-        Olive().WriteLine(msg);
+        Olive().WriteLine(msg, false);
     }
     
     

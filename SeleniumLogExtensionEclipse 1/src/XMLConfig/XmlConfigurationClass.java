@@ -3,10 +3,6 @@ package XMLConfig;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import javax.swing.JOptionPane;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.*;
@@ -26,11 +22,22 @@ public final class XmlConfigurationClass {
     public String SeleniumLogDesktopInstallationFolder;
 
     public String ScreenshotsFolder;
+    public boolean UseFastScreenshot;
     public boolean TakeScreenshotOnEveryWriteline;
+    public boolean TakeScreenshotOnEveryInfo;
+    public boolean TakeScreenshotOnEveryInfo2;
+    public boolean TakeScreenshotOnEveryDebug;
+    public boolean TakeScreenshotOnEveryDebug2;    
     public boolean TakeScreenshotOnEveryPass;
+    public boolean TakeScreenshotOnEveryPass2;
     public boolean TakeScreenshotOnEveryFail;
+    public boolean TakeScreenshotOnEveryFail2;
     public boolean TakeScreenshotOnEveryError;
+    public boolean TakeScreenshotOnEveryError2;
     public boolean TakeScreenshotOnEveryWarning;
+    public boolean TakeScreenshotOnEveryWarning2;
+    public boolean TakeScreenshotOnEveryFatal;
+    public boolean TakeScreenshotOnEveryFatal2;    
     public boolean TakeScreenshotOnEveryException;
 
     public boolean ForceThrowExceptionOnAssertFail;
@@ -148,7 +155,7 @@ public final class XmlConfigurationClass {
     }
     
     private void ParseXML(boolean debug) {
-        XPathReader reader = new XPathReader("SeleniumLog.config");
+        XPathReader reader = new XPathReader("SLConfig.xml");
         String expression = "/configuration";
         NodeList nodes = (NodeList)reader.read(expression, XPathConstants.NODESET);
         traverse(nodes);
@@ -174,7 +181,7 @@ public final class XmlConfigurationClass {
                         if ((attrs != null) && (attrs.getLength() > 0)) {
                             String attr = attrs.item(0).getNodeValue();
                             String val = aNode.getFirstChild().getNodeValue();
-                            //System.out.println(aNode.getNodeName() + ", ATTRIB [" + attr + "]");
+                            System.out.println(aNode.getNodeName() + ", ATTRIB [" + attr + "]");
                             switch (attr) {
                                 case "Enable SeleniumLog":
                                     EnableSeleniumLog = TrueOrFalse("Enable SeleniumLog", val);
@@ -189,14 +196,7 @@ public final class XmlConfigurationClass {
                                     break;
 
                                 case "Log file path":
-                                	Path p = Paths.get(val);
-                                	File d = new File(p.getParent().toString());
-                                	if (!d.exists()) 
-                                	{                            	
-                                		JOptionPane.showMessageDialog(null, "ERROR: Log file path '" + val + "' folder does not exist or you do not have write permission. Exiting. Please update SeleniumgLog.config file's 'Log file path' property with a folder path that exists.");
-                                		throw new Exception("ERROR: Log file path '" + val + "' folder does not exist or you do not have write permission. Exiting. Please update SeleniumgLog.config file's 'Log file path' property with a folder path that exists.");
-                                	}
-                                	LogFilePath = val;
+                                    LogFilePath = val;
                                     break;
 
                                 case "Write line numbers":
@@ -204,45 +204,83 @@ public final class XmlConfigurationClass {
                                     break;
 
 
-                                case "Auto-launch SeleniumLog Viewer":
-                                    AutoLaunchSeleniumLogDesktop = TrueOrFalse("Auto-launch SeleniumLog Viewer", val);
+                                case "Auto-launch SeleniumLog Desktop":
+                                    AutoLaunchSeleniumLogDesktop = TrueOrFalse("Auto-launch SeleniumLog Desktop", val);
                                     break;
 
-                                case "SeleniumLog Viewer Installation Folder":
+                                case "SeleniumLog Desktop Installation Folder":
                                     SeleniumLogAppInstallationFolder = val;
                                     break;
 
                                 case "Screenshots folder":
-                                	Path p2 = Paths.get(val);
-                                	File d2 = new File(p2.getParent().toString());
-                                	if (!d2.exists()) 
-                                	{                            	
-                                		JOptionPane.showMessageDialog(null, "ERROR: Screenshots folder '" + val + "' folder does not exist or you do not have write permission. Exiting. Please update SeleniumgLog.config file's 'Log file path' property with a folder path that exists.");
-                                		throw new Exception("ERROR: Screenshots folder '" + val + "' folder does not exist or you do not have write permission. Exiting. Please update SeleniumgLog.config file's 'Log file path' property with a folder path that exists.");
-                                	}
                                     ScreenshotsFolder = val;
                                     break;
 
+                                case "Use fast screenshot":
+                                    UseFastScreenshot = TrueOrFalse("Use fast screenshot", val);
+                                    break;
+                                    
                                 case "Take screenshot on every log.WriteLine()":
                                     TakeScreenshotOnEveryWriteline = TrueOrFalse("Take screenshot on every log.WriteLine()", val);
+                                    break;
+
+
+                                case "Take screenshot on every log.Info()":
+                                    TakeScreenshotOnEveryInfo = TrueOrFalse("Take screenshot on every log.Info()", val);
+                                    break;
+
+                                case "Take screenshot on every log.Info2()":
+                                    TakeScreenshotOnEveryInfo2 = TrueOrFalse("Take screenshot on every log.Info2()", val);
+                                    break;
+
+                                case "Take screenshot on every log.Debug()":
+                                    TakeScreenshotOnEveryDebug = TrueOrFalse("Take screenshot on every log.Debug()", val);
+                                    break;
+
+                                case "Take screenshot on every log.Debug2()":
+                                    TakeScreenshotOnEveryDebug2 = TrueOrFalse("Take screenshot on every log.Debug2()", val);
                                     break;
 
                                 case "Take screenshot on every log.Pass()":
                                     TakeScreenshotOnEveryPass = TrueOrFalse("Take screenshot on every log.Pass()", val);
                                     break;
 
+                                case "Take screenshot on every log.Pass2()":
+                                    TakeScreenshotOnEveryPass2 = TrueOrFalse("Take screenshot on every log.Pass2()", val);
+                                    break;
+
                                 case "Take screenshot on every log.Fail()":
                                     TakeScreenshotOnEveryFail = TrueOrFalse("Take screenshot on every log.Fail()", val);
+                                    break;
+
+                                case "Take screenshot on every log.Fail2()":
+                                    TakeScreenshotOnEveryFail2 = TrueOrFalse("Take screenshot on every log.Fail2()", val);
                                     break;
 
                                 case "Take screenshot on every log.Error()":
                                     TakeScreenshotOnEveryError = TrueOrFalse("Take screenshot on every log.Error()", val);
                                     break;
 
+                                case "Take screenshot on every log.Error2()":
+                                    TakeScreenshotOnEveryError2 = TrueOrFalse("Take screenshot on every log.Error2()", val);
+                                    break;
+
                                 case "Take screenshot on every log.Warning()":
                                     TakeScreenshotOnEveryWarning = TrueOrFalse("Take screenshot on every log.Warning()", val);
                                     break;
 
+                                case "Take screenshot on every log.Warning2()":
+                                    TakeScreenshotOnEveryWarning2 = TrueOrFalse("Take screenshot on every log.Warning2()", val);
+                                    break;
+                                    
+                                case "Take screenshot on every log.Fatal()":
+                                    TakeScreenshotOnEveryFatal = TrueOrFalse("Take screenshot on every log.Fatal()", val);
+                                    break;
+
+                                case "Take screenshot on every log.Fatal2()":
+                                    TakeScreenshotOnEveryFatal2 = TrueOrFalse("Take screenshot on every log.Fatal2()", val);
+                                    break;
+                                    
                                 case "Take screenshot on every Exception":
                                     TakeScreenshotOnEveryException = TrueOrFalse("Take screenshot on every Exception", val);
                                     break;

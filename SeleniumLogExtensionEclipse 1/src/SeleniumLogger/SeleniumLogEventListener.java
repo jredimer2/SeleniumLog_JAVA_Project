@@ -78,9 +78,9 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
 
             for (Result result : Results) {
                 if (result.result) {
-                    log.Green().Pass().WriteLine(result.cummulative_xpath + "  - XPath Found - " + result.matches + " matches.");
+                    log.Green().Pass().Debug(result.cummulative_xpath + "  - XPath Found - " + result.matches + " matches.");
                 } else {
-                    log.Red().Fail().WriteLine(result.cummulative_xpath + "  - XPath Not Found!");
+                    log.Red().Fail().Debug(result.cummulative_xpath + "  - XPath Not Found!");
                 }
             }
         }
@@ -89,14 +89,12 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
         private class SeleniumLogEventHandler implements WebDriverEventListener{    
         //++
         @Override
-        public void beforeNavigateTo(String string, WebDriver wd) {
+        public void beforeNavigateTo(String url, WebDriver wd) {
             SeleniumLog log = SeleniumLog.Instance();
             if (log.Config.OnNavigating_LogBeforeEvent)
             {
-                //log.SaveIndent("OnNavigating");
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Navigating To: " + string, log.Config.OnNavigating_TakeScreenshotBeforeEvent);
-                //log.RestoreIndent("OnNavigating");
+                log.Debug("[Selenium Event]  Navigating To: " + url, log.Config.OnNavigating_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -106,10 +104,8 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             SeleniumLog log = SeleniumLog.Instance();
             if (log.Config.OnNavigating_LogAfterEvent)
             {
-                //log.SaveIndent("OnNavigated");
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Navigation Success!", log.Config.OnNavigating_TakeScreenshotBeforeEvent);
-                //log.RestoreIndent("OnNavigated");
+				log.Debug("[Selenium Event]  Navigation Success!", log.Config.OnNavigating_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -120,7 +116,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnNavigatingBack_LogBeforeEvent)
             {
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Navigating Back from: " + wd.getCurrentUrl(), log.Config.OnNavigatingBack_TakeScreenshotBeforeEvent);
+				log.Debug("[Selenium Event]  Navigating Back: " + wd.getCurrentUrl(), log.Config.OnNavigatingBack_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -131,7 +127,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnNavigatingBack_LogAfterEvent)
             {
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Navigate Back Success!", log.Config.OnNavigatingBack_TakeScreenshotAfterEvent);
+                log.Debug("[Selenium Event]  Navigate Back Success!", log.Config.OnNavigatingBack_TakeScreenshotAfterEvent);
                 log.Unindent();
             }
         }
@@ -142,7 +138,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnNavigatingForward_LogBeforeEvent)
             {
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Navigating Forward from: " + wd.getCurrentUrl(), log.Config.OnNavigatingForward_TakeScreenshotBeforeEvent);
+				log.Debug("[Selenium Event]  Navigating Forward: " + wd.getCurrentUrl(), log.Config.OnNavigatingForward_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -153,7 +149,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnNavigatingForward_LogAfterEvent)
             {
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Navigate Forward Success!", log.Config.OnNavigatingForward_TakeScreenshotAfterEvent);
+                log.Debug("[Selenium Event]  Navigate Forward Success!", log.Config.OnNavigatingForward_TakeScreenshotAfterEvent);
                 log.Unindent();
             }
         }
@@ -167,9 +163,9 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             _locator = FindMethodStr[1].trim();
 
             if (log.Config.OnFindElement_LogBeforeEvent)
-            {
+            { 
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Finding Element: " + by.toString(), log.Config.OnFindElement_TakeScreenshotBeforeEvent);
+                log.Debug("[Selenium Event]  Finding Element: " + _locator, log.Config.OnFindElement_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -180,7 +176,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnFindElement_LogAfterEvent)
             {
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Element Found!", log.Config.OnFindElement_TakeScreenshotAfterEvent);
+                log.Debug("[Selenium Event]  Element Found!", log.Config.OnFindElement_TakeScreenshotAfterEvent);
                 log.Unindent();
             }
         }
@@ -190,8 +186,8 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             SeleniumLog log = SeleniumLog.Instance();
             if (log.Config.OnClick_LogBeforeEvent)
             {
-                log.Indent();
-                log.WriteLine("[Selenium Event]  Clicking Element: " + _by + " " + _locator, log.Config.OnClick_TakeScreenshotBeforeEvent);
+				log.Indent();
+                log.Debug("[Selenium Event]  Clicking Element: " + _locator, log.Config.OnClick_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -202,35 +198,38 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnClick_LogAfterEvent)
             {
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Click Success!", log.Config.OnClick_TakeScreenshotAfterEvent);
+                log.Debug("[Selenium Event]  Click Success!", log.Config.OnClick_TakeScreenshotAfterEvent);
                 log.Unindent();
             }
         }
         //++
         @Override
-        public void beforeChangeValueOf(WebElement we, WebDriver wd) {
-            SeleniumLog log = SeleniumLog.Instance();
+        public void beforeChangeValueOf(WebElement we, WebDriver wd) {		
+			SeleniumLog log = SeleniumLog.Instance();
             if (log.Config.OnChangeValue_LogBeforeEvent)
             {
                 log.SaveIndent("OnElementValueChanging");
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Changing value ...");
-                if ((_keyInput != null) && !_keyInput.isEmpty())
+				if ((_keyInput != null) && !_keyInput.isEmpty())
                 {
-                    log.WriteLine(" [" + _keyInput + "]", log.Config.OnChangeValue_TakeScreenshotBeforeEvent);
+                    log.Debug("[Selenium Event]  Element value changing to [" + _keyInput + "]", log.Config.OnChangeValue_TakeScreenshotBeforeEvent);
                 }
+                else
+                {
+                    log.Debug("[Selenium Event]  Element value changing to - NULL or EMPTY - ", log.Config.OnChangeValue_TakeScreenshotBeforeEvent);
+                }						
                 log.RestoreIndent("OnElementValueChanging");
             }
         }
         //++
         @Override
         public void afterChangeValueOf(WebElement we, WebDriver wd) {
-            SeleniumLog log = SeleniumLog.Instance();
+			SeleniumLog log = SeleniumLog.Instance();
             if (log.Config.OnChangeValue_LogAfterEvent)
             {
                 log.SaveIndent("OnElementValueChanged");
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Successfully changed value [" + we.getAttribute("value") + "]", log.Config.OnChangeValue_TakeScreenshotAfterEvent);
+                log.Debug("[Selenium Event]  Successfully changed value [" + we.getAttribute("value") + "]", log.Config.OnChangeValue_TakeScreenshotAfterEvent);
                 log.Indent();
 
                 if ((_keyInput != null) && !_keyInput.isEmpty())
@@ -247,7 +246,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnScriptExecute_LogBeforeEvent)
             {
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Script Executing: " + string, log.Config.OnScriptExecute_TakeScreenshotBeforeEvent);
+				log.Debug("[Selenium Event]  Script Executing: " + string, log.Config.OnScriptExecute_TakeScreenshotBeforeEvent);
                 log.Unindent();
             }
         }
@@ -258,28 +257,29 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
             if (log.Config.OnScriptExecute_LogAfterEvent)
             {
                 log.Indent();
-                log.WriteLine("[Selenium Event]  Script Executed Successfully!", log.Config.OnScriptExecute_TakeScreenshotAfterEvent);
+                log.Debug("[Selenium Event]  Script Executed Successfully!", log.Config.OnScriptExecute_TakeScreenshotAfterEvent);
                 log.Unindent();
             }
         }
         //++
         @Override
         public void onException(Throwable thrwbl, WebDriver wd) {
-            SeleniumLog log = SeleniumLog.Instance();
-            log.Indent();
-            log.Error().Red().WriteLine("[Selenium Event]  Exception Thrown: " + thrwbl.getMessage(), true);
+			SeleniumLog log = SeleniumLog.Instance();
+            log.Indent();         
             if (log.Config.OnWebdriverExceptionThrown_LogEvent)
             {
-                if (_by.equals("xpath"))
+                log.Error().Red().Debug("[Selenium Event]  Exception Thrown: " + thrwbl.getMessage(), true);
+                if (_by == "xpath")
                 {
-                    log.Red().WriteLine("Running XPath Diagnostics: Expand to see which part of XPath failed.");
+                    log.Red().Debug("Running XPath Diagnostics: Expand to see which part of XPath failed.");
                     log.Indent();
                     XPathTest.Test(driver, _locator);
                     XPathTest.DisplayResults();
                     log.Unindent();
                 }
             }
-            log.Unindent();        }
+            log.Unindent();			
+		}
     }
     
     private final XPathTester XPathTest = new XPathTester();

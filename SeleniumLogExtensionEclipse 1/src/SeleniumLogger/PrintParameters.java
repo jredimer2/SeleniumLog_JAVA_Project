@@ -36,7 +36,7 @@ class PrintParameters {
         {
             //Console.WriteLine("TP-0.1.S");
             if (log.Config.FunctionTrace_DisplayNullInputs == true)
-                log.Gray().WriteLine(argumentName + " [NULL]");
+                log.Gray().Info(argumentName + " [NULL]");
             //Console.WriteLine("TP-0.1.E");
         }
         else
@@ -51,9 +51,9 @@ class PrintParameters {
                 HashMap data = (HashMap)arg;
 
                 if (debug) 
-                    log.Blue().WriteLine("45 " + argumentName + ": ");
+                    log.Blue().Info("45 " + argumentName + ": ");
                 else 
-                    log.Purple().WriteLine(argumentName + ": ");
+                    log.Purple().Info(argumentName + ": ");
 
                 log.SaveIndent("______DisplayDictionaryValues_____");
                 log.Indent();
@@ -80,15 +80,15 @@ class PrintParameters {
                 //Console.WriteLine(argumentName + ":");
                 if (elem_counter > -1)
                     if (debug)
-                        log.Purple().WriteLine("60" + argumentName + " " + elem_counter + " : ");
+                        log.Purple().Info("60" + argumentName + " " + elem_counter + " : ");
                     else
-                        log.Purple().WriteLine(argumentName + " " + elem_counter + " : ");
+                        log.Purple().Info(argumentName + " " + elem_counter + " : ");
 
                 else
                     if (debug)
-                        log.Purple().WriteLine("60" + argumentName + " " + "COUNT?? : ");
+                        log.Purple().Info("60" + argumentName + " " + "COUNT?? : ");
                     else
-                        log.Purple().WriteLine(argumentName + " " + elem_counter + " : ");
+                        log.Purple().Info(argumentName + " " + elem_counter + " : ");
 
                 log.SaveIndent("______DisplayHashTableValues_____");
                 log.Indent();
@@ -102,9 +102,9 @@ class PrintParameters {
             else if (CheckParameterType.CheckIfEnumerable(arg))
             {
                 if (debug)
-                    log.Red().WriteLine("50 type " + type + "  " + argumentName + ": ");
+                    log.Red().Info("50 type " + type + "  " + argumentName + ": ");
                 else
-                    log.Purple().WriteLine(argumentName + ": ");
+                    log.Purple().Info(argumentName + ": ");
 
                 log.SaveIndent("______DisplayEenumerableValues_____");
                 log.Indent();
@@ -142,7 +142,7 @@ class PrintParameters {
         if (arg == null)
         {
             if (log.Config.FunctionTrace_DisplayNullInputs == true)
-                log.Gray().WriteLine(String.format("%s %d : [NULL]", argumentName, elem_counter));
+                log.Gray().Info(String.format("%s %d : [NULL]", argumentName, elem_counter));
             log.RestoreIndent("ManageCustomDataStructure");
             return false;
         }
@@ -174,7 +174,7 @@ class PrintParameters {
             if (type == 4)
             {
                 //log.Red().WriteLine("30 type 4 : " + comment);
-                log.Purple().WriteLine(comment);
+                log.Purple().Info(comment);
                 log.Indent();
             }
 
@@ -217,31 +217,31 @@ class PrintParameters {
         if (type == 1)
         {
             if (debug)
-                log.Purple().WriteLine(String.format("100 type" + type + " %s [%s]", argumentName, arg.toString()));
+                log.Purple().Info(String.format("100 type" + type + " %s [%s]", argumentName, arg.toString()));
             else
-                log.Purple().WriteLine(String.format("%s [%s]", argumentName, arg.toString()));
+                log.Purple().Info(String.format("%s [%s]", argumentName, arg.toString()));
         }
         else if (type == 2)
         {
             if (debug)
-                log.Purple().WriteLine(String.format("101 type %d: key [%s] value [%s]", type, argumentName, arg.toString()));
+                log.Purple().Info(String.format("101 type %d: key [%s] value [%s]", type, argumentName, arg.toString()));
             else
-                log.Purple().WriteLine(String.format("key [%s] value [%s]", argumentName, arg.toString()));
+                log.Purple().Info(String.format("key [%s] value [%s]", argumentName, arg.toString()));
         }
         else if (type == 3)
         {
             if (debug)
-                log.Purple().WriteLine(String.format("102 type" + type + " [%s]", arg.toString()));
+                log.Purple().Info(String.format("102 type" + type + " [%s]", arg.toString()));
             else
-                log.Purple().WriteLine(String.format("[%s]", arg.toString()));
+                log.Purple().Info(String.format("[%s]", arg.toString()));
         }
         else if (type == 4)
         {
             // not a data structure, so don't parse
             if (debug)
-                log.Purple().WriteLine(String.format("103 type" + type + " %s [%s]", argumentName, arg.toString()));
+                log.Purple().Info(String.format("103 type" + type + " %s [%s]", argumentName, arg.toString()));
             else
-                log.Purple().WriteLine(String.format("%s [%s]", argumentName, arg.toString()));
+                log.Purple().Info(String.format("%s [%s]", argumentName, arg.toString()));
             //return false;
         }
         log.RestoreIndent("ManageCustomDataStructure");

@@ -106,7 +106,7 @@ public final class SeleniumLog {
         {
             try {
                 //Process myProcess = new ProcessBuilder(command, arg).start();
-                Process logger = new ProcessBuilder(Config.SeleniumLogAppInstallationFolder +  "\\SeleniumLog Desktop.exe",
+                Process logger = new ProcessBuilder(Config.SeleniumLogAppInstallationFolder +  "\\SeleniumLog Viewer.exe",
                         Config.LogFilePath).start();
                 /*
                 Process logger = new Process();

@@ -32,7 +32,7 @@ class TestClass
 
 public class ExampleInstantiationsTest {
     
-    static void TestIndents()
+    private void TestIndents1()
     {
         SeleniumLog log = SeleniumLog.Instance();
         log.Info("line 1");
@@ -69,7 +69,7 @@ public class ExampleInstantiationsTest {
         log.Info("line 30");
     }
     
-    static void TestIndents2() {
+    private void TestIndents2() {
     	SeleniumLog log = SeleniumLog.Instance();
         int L = 0;
 
@@ -184,7 +184,7 @@ public class ExampleInstantiationsTest {
         log.Info("line 100");
     }
     
-    static void TestColors() {
+    private void TestColors() {
     	SeleniumLog log = SeleniumLog.Instance();
     	log.Blue().Info("Blue");
     	log.BlueGreen("BlueGrn");
@@ -192,7 +192,7 @@ public class ExampleInstantiationsTest {
     	log.Red().Info("Red");    	
     }
     
-    static void TestSeleniumWebdriverIntegration() {
+    private void TestSeleniumWebdriverIntegration() {
         FirefoxDriver driver0 = new FirefoxDriver();
         SeleniumLogEventListener driver = new SeleniumLogEventListener(driver0);        
         
@@ -210,7 +210,7 @@ public class ExampleInstantiationsTest {
         log.Pass();
     }
     
-    static void TestScreenshots() {
+    private void TestScreenshots() {
     	FirefoxDriver driver0 = new FirefoxDriver();
     	SeleniumLog log = SeleniumLog.Instance();
     	
@@ -221,7 +221,7 @@ public class ExampleInstantiationsTest {
     	
     }
     
-    static void TestSeleniumLogEventListener() {
+    private void TestSeleniumLogEventListener() {
     	ChromeDriver driver0 = new ChromeDriver();
         SeleniumLogEventListener driver = new SeleniumLogEventListener(driver0); 
     	SeleniumLog log = SeleniumLog.Instance(driver);
@@ -251,7 +251,7 @@ public class ExampleInstantiationsTest {
         driver.findElement(By.xpath("//span[contains(text(),'Submit')]/..")).click();    
     }
     
-    static WebDriver _testSingletonA() {
+    private WebDriver _testSingletonA() {
     	ChromeDriver driver0 = new ChromeDriver();
         SeleniumLogEventListener driver = new SeleniumLogEventListener(driver0); 
     	SeleniumLog log = SeleniumLog.Instance(driver);
@@ -271,7 +271,7 @@ public class ExampleInstantiationsTest {
         return driver;
     }
     
-    static void _testSingletonB(WebDriver driver) {
+    private void _testSingletonB(WebDriver driver) {
     	//ChromeDriver driver0 = new ChromeDriver();
         //SeleniumLogEventListener driver = new SeleniumLogEventListener(driver0); 
     	SeleniumLog log = SeleniumLog.Instance();
@@ -289,12 +289,12 @@ public class ExampleInstantiationsTest {
         driver.findElement(By.xpath("//span[contains(text(),'Submit')]/..")).click(); 
     }
     
-    static void TestSingleton() {
+    private void TestSingleton() {
     	WebDriver driver = _testSingletonA();
     	_testSingletonB(driver);
     }
     
-    static void TestXPathDiagnostics() {
+    private void TestXPathDiagnostics() {
     	ChromeDriver driver0 = new ChromeDriver();
         SeleniumLogEventListener driver = new SeleniumLogEventListener(driver0); 
     	SeleniumLog log = SeleniumLog.Instance(driver);
@@ -324,8 +324,8 @@ public class ExampleInstantiationsTest {
         driver.findElement(By.xpath("//span[contains(text(),'Submit')]/..")).click();
     }
     
-    public static void main(String[] args) throws ParseException {
-    	
+    //public static void main(String[] args) throws ParseException {
+    public void runtests() {	
     	TestIndents2();
     	//TestColors();
     	//TestSeleniumWebdriverIntegration();

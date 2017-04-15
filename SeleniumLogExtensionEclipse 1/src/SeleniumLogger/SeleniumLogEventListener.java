@@ -2,6 +2,8 @@
 package SeleniumLogger;
 
 import XMLConfig.XmlConfigurationClass;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +46,8 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
         }
         
         public void Test(WebDriver driver, String XPath)
-        {            
+        {           
+
             //String XPath2 = Regex.Replace(input: XPath, pattern: @"^\/\/", replacement: "");
             String XPath2 = XPath.replaceAll("^\\/\\/", "");
             String[] components = XPath2.split("/");
@@ -54,7 +57,8 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
 
             Reset();
 
-            for (String comp : components) {
+            for (String comp : components) 
+            {
                 i++;
                 if (i == 1) {
                     cummulative_xpath = "//" + comp;
@@ -70,7 +74,7 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
 	                Results.add(new Result((foundelements.size() > 0), foundelements.size(), cummulative_xpath));
                 } catch (InvalidSelectorException e) {                	
                 }
-            }
+            }        	
         }
         
         public void DisplayResults() {
@@ -264,10 +268,10 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
         //++
         @Override
         public void onException(Throwable thrwbl, WebDriver wd) {
-			SeleniumLog log = SeleniumLog.Instance();
-            log.Indent();         
+			SeleniumLog log = SeleniumLog.Instance();                     
             if (log.Config.OnWebdriverExceptionThrown_LogEvent)
             {
+            	log.Indent();
                 log.Error().Red().Debug("[Selenium Event]  Exception Thrown: " + thrwbl.getMessage(), true);
                 if (_by == "xpath")
                 {
@@ -277,8 +281,9 @@ public class SeleniumLogEventListener extends EventFiringWebDriver {
                     XPathTest.DisplayResults();
                     log.Unindent();
                 }
+                log.Unindent();	
             }
-            log.Unindent();			
+            		
 		}
     }
     

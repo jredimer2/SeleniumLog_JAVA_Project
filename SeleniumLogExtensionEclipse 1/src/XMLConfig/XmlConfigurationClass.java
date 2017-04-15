@@ -13,15 +13,22 @@ import org.xml.sax.SAXException;
 public final class XmlConfigurationClass {
     
     public boolean EnableSeleniumLog;
-    public boolean RichTextOutput;
+    //public boolean RichTextOutput;
     public String TimestampFormat;
-    public String LogFilePath;
+    //public String LogFilePath;
     public boolean WriteLineNumbers;
 
+    public boolean OutputFormatConsole;
+    public boolean OutputFormatText ;
+    public String OutputFormatText_Filepath;
+    public boolean OutputFormatSeleniumLogViewer;
+    public String OutputFormatSeleniumLogViewer_Filepath;
+    public String OutputFormatSeleniumLogViewer_Screenshots;
+    
     public boolean AutoLaunchSeleniumLogDesktop;
     public String SeleniumLogDesktopInstallationFolder;
 
-    public String ScreenshotsFolder;
+    //public String ScreenshotsFolder;
     public boolean UseFastScreenshot;
     public boolean TakeScreenshotOnEveryWriteline;
     public boolean TakeScreenshotOnEveryInfo;
@@ -187,17 +194,17 @@ public final class XmlConfigurationClass {
                                     EnableSeleniumLog = TrueOrFalse("Enable SeleniumLog", val);
                                     break;
 
-                                case "Rich text output":
-                                    RichTextOutput = TrueOrFalse("Rich text output", val);
-                                    break;
+                                //case "Rich text output":
+                                //    RichTextOutput = TrueOrFalse("Rich text output", val);
+                                //    break;
                                     
                                 case "Timestamp format":
                                     TimestampFormat = val;
                                     break;
 
-                                case "Log file path":
-                                    LogFilePath = val;
-                                    break;
+                                //case "Log file path":
+                                //    LogFilePath = val;
+                                 //   break;
 
                                 case "Write line numbers":
                                     WriteLineNumbers = TrueOrFalse("Write line numbers", val);
@@ -207,14 +214,30 @@ public final class XmlConfigurationClass {
                                 case "Auto-launch SeleniumLog Desktop":
                                     AutoLaunchSeleniumLogDesktop = TrueOrFalse("Auto-launch SeleniumLog Desktop", val);
                                     break;
+                                    
+
+                                case "console":
+                                    OutputFormatConsole = TrueOrFalse("console", val);
+                                    break;
+
+                                case "text":
+                                    OutputFormatText = TrueOrFalse("text", val);
+                                    OutputFormatText_Filepath = aNode.getAttributes().getNamedItem("filepath").getNodeValue(); //xNav.GetAttribute("filepath", "");
+                                    break;
+
+                                case "seleniumlog.viewer":
+                                    OutputFormatSeleniumLogViewer = TrueOrFalse("seleniumlog.viewer", val);
+                                    OutputFormatSeleniumLogViewer_Filepath = aNode.getAttributes().getNamedItem("filepath").getNodeValue(); //xNav.GetAttribute("filepath", "");
+                                    OutputFormatSeleniumLogViewer_Screenshots = aNode.getAttributes().getNamedItem("screenshots_folder").getNodeValue(); //xNav.GetAttribute("screenshots_folder", "");
+                                    break;
 
                                 case "SeleniumLog Desktop Installation Folder":
                                     SeleniumLogAppInstallationFolder = val;
                                     break;
 
-                                case "Screenshots folder":
-                                    ScreenshotsFolder = val;
-                                    break;
+                                //case "Screenshots folder":
+                                //    ScreenshotsFolder = val;
+                                //    break;
 
                                 case "Use fast screenshot":
                                     UseFastScreenshot = TrueOrFalse("Use fast screenshot", val);
@@ -452,82 +475,101 @@ public final class XmlConfigurationClass {
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     EnableSeleniumLog = Boolean.parseBoolean(val);
                                     break;
+                                    
                                 case "enable_selenium_webdriver_trace":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     Enable_Selenium_Webdriver_Trace = Boolean.parseBoolean(val);
                                     break;
+                                    
                                 case "enable_general_function_trace":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     Enable_Generic_Function_Trace = Boolean.parseBoolean(val);
                                     break;
+                                    
                                 case "auto_start_seleniumlog_app":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     AutoStartSeleniumLogApp = Boolean.parseBoolean(val);
                                     break;
+                                    
                                 case "seleniumlog_app_installation_folder":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     SeleniumLogAppInstallationFolder = val;
                                     break;
+                                    
                                 case "timestamp_format":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     TimestampFormat = val;
                                     break;
-                                case "output_file_path":
-                                    ExceptionMessageBuffer = aNode.getNodeName();
-                                    OutputFilePath = val;
-                                    break;
-                                case "screenshots_folder":
-                                    ExceptionMessageBuffer = aNode.getNodeName();
-                                    ScreenshotsFolder = val;
-                                    break;
+                                    
+                                //case "output_file_path":
+                                //    ExceptionMessageBuffer = aNode.getNodeName();
+                                 //   OutputFilePath = val;
+                                //    break;
+                                    
+                                //case "screenshots_folder":
+                                //    ExceptionMessageBuffer = aNode.getNodeName();
+                                //    ScreenshotsFolder = val;
+                                //    break;
+                                    
                                 case "screenshot_on_writeline":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     ScreenshotOnEveryMessage = Boolean.parseBoolean(val);
                                     break;
+                                    
                                 case "screenshot_on_pass":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     ScreenshotOnEveryPass = Boolean.parseBoolean(val);
                                     break;
+                                    
                                 case "screenshot_on_fail":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     ScreenshotOnEveryFail = Boolean.parseBoolean(val);
                                     break;
+                                    
                                 case "screenshot_on_error":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     ScreenshotOnEveryError = Boolean.parseBoolean(val);
                                     break;
+                                    
                                 case "screenshot_on_warning":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     ScreenshotOnEveryWarning = Boolean.parseBoolean(val);
                                     break;
+                                    
                                 case "force_throw_exception_on_assert_fail":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     ScreenshotOnEveryFail = Boolean.parseBoolean(val);
                                     break;
+                                    
                                 case "on_click_event":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     //_ParentNode = "OnClick";
                                     break;
+                                    
                                 case "log_function_start":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     //if (_ParentNode == "OnClick")
                                     //    OnClick_LogFunctionStart = Convert.ToBoolean(val);
                                     break;
+                                    
                                 case "log_function_end":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     //if (_ParentNode == "OnClick")
                                     //    OnClick_LogFunctionEnd = Convert.ToBoolean(val);
                                     break;
+                                    
                                 case "screenshot_on_start":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     //if (_ParentNode == "OnClick")
                                     //    OnClick_ScreenshotOnStart = Convert.ToBoolean(val);
                                     break;
+                                    
                                 case "screenshot_on_end":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     //if (_ParentNode == "OnClick")
                                     //    OnClick_ScreenshotOnEnd = Convert.ToBoolean(val);
                                     break;
+                                    
                                 case "general_function_trace_display_null_inputs":
                                     ExceptionMessageBuffer = aNode.getNodeName();
                                     FunctionTrace_DisplayNullInputs = Boolean.parseBoolean(val);

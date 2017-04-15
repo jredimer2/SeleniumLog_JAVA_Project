@@ -49,19 +49,19 @@ public final class SeleniumLog {
     private String _LogFilePath;
     private String _ScreenshotsPath;
     private Stack PathStack = new Stack();
-    private boolean _FileCreated;
-    
+    private boolean _FileCreated;    
     private Stack _CurrentIndentLevelStack = new Stack();
-    private SaveIndents _SavedIndents = new SaveIndents();
-    
-    private MessageSettings _MessageSettings = new MessageSettings();
+    private SaveIndents _SavedIndents = new SaveIndents();    
+    private MessageSettings _MessageSettings1 = new MessageSettings();
+    private MessageSettings _MessageSettings2 = new MessageSettings();
+    private MessageSettings _MessageSettings3 = new MessageSettings();
 
     private boolean Result = true;
 
     public String OutputFilePath() { return _LogFilePath; }
     public String ScreenshotsPath() { return _ScreenshotsPath; }
-    private int ActualIndentLevel() { return _MessageSettings.indentModel.getCurrentLevel(); }
-    private int PendingIndentLevel() { return _MessageSettings.GetPendingLevel(); }
+    private int ActualIndentLevel() { return _MessageSettings1.indentModel.getCurrentLevel(); }
+    private int PendingIndentLevel() { return _MessageSettings1.GetPendingLevel(); }
 
     private ArrayList<Integer> wdlist = new ArrayList<Integer>();
     public WebDriver driver;
@@ -87,6 +87,8 @@ public final class SeleniumLog {
 
         if (overwrite)
         {
+        	
+        	/*
             _LogFilePath = Config.LogFilePath;
             NewFile();
             try {
@@ -97,6 +99,35 @@ public final class SeleniumLog {
 
             _MessageSettings.TimestampFormat = Config.TimestampFormat;
             _MessageSettings.EnableLogging = Config.EnableSeleniumLog;
+            */          
+            
+            if (Config.OutputFormatText)
+            {
+                NewFile(Config.OutputFormatText_Filepath);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) { }
+                if (overwrite)
+                    Clear(Config.OutputFormatText_Filepath);
+            }
+
+            if (Config.OutputFormatSeleniumLogViewer)
+            {
+                NewFile(Config.OutputFormatSeleniumLogViewer_Filepath);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) { }
+                if (overwrite)
+                    Clear(Config.OutputFormatSeleniumLogViewer_Filepath);
+                _ScreenshotsPath = Config.OutputFormatSeleniumLogViewer_Screenshots;
+            }
+            _MessageSettings1.TimestampFormat = Config.TimestampFormat;
+            _MessageSettings1.EnableLogging = Config.EnableSeleniumLog;
+            _MessageSettings2.TimestampFormat = Config.TimestampFormat;
+            _MessageSettings2.EnableLogging = Config.EnableSeleniumLog; 
+            _MessageSettings3.TimestampFormat = Config.TimestampFormat;
+            _MessageSettings3.EnableLogging = Config.EnableSeleniumLog;
+            
         }
         else
         {
@@ -107,13 +138,14 @@ public final class SeleniumLog {
             try {
                 //Process myProcess = new ProcessBuilder(command, arg).start();
                 Process logger = new ProcessBuilder(Config.SeleniumLogAppInstallationFolder +  "\\SeleniumLog Viewer.exe",
-                        Config.LogFilePath).start();
+                        Config.OutputFormatSeleniumLogViewer_Filepath).start();
                 /*
                 Process logger = new Process();
                 logger.StartInfo.FileName = Config.SeleniumLogAppInstallationFolder +  "\\SeleniumLog Desktop.exe";
                 logger.StartInfo.Arguments = Config.LogFilePath;
                 logger.Start();
-                */
+                */               
+                
             } catch (IOException ex) {
                 //Logger.getLogger(SeleniumLog.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -153,7 +185,9 @@ public final class SeleniumLog {
 
     public void RestoreIndent(String Name)
     {
-        _MessageSettings.GetPendingLevel();
+        _MessageSettings1.GetPendingLevel();
+        _MessageSettings2.GetPendingLevel();
+        _MessageSettings3.GetPendingLevel();
 
         int[] irestore = _SavedIndents.Get(Name);
         if (irestore[1] < 0)
@@ -178,10 +212,10 @@ public final class SeleniumLog {
     /// <summary>
     /// Create an empty file
     /// </summary>
-    private void NewFile()
+    private void NewFile(String Filepath)
     {
         //File.writeAllText(_LogFilePath, "");
-        try (PrintWriter out = new PrintWriter(_LogFilePath)) {
+        try (PrintWriter out = new PrintWriter(Filepath)) {
             out.print("");
         } catch (FileNotFoundException ex) {
             //Logger.getLogger(SeleniumLog.class.getName()).log(Level.SEVERE, null, ex);
@@ -192,9 +226,9 @@ public final class SeleniumLog {
     /// <summary>
     /// Clear file
     /// </summary>
-    private void Clear()
+    private void Clear(String Filepath)
     {
-        NewFile();
+        NewFile(Filepath);
     }
     
     private String FormPathString()
@@ -213,41 +247,81 @@ public final class SeleniumLog {
     /// <param name="msg"></param>
     private void WriteLine(String msg, boolean take_screenshot, boolean TakeScreenshots)
     {
-        if (!_MessageSettings.EnableLogging) return;
+        if (!_MessageSettings1.EnableLogging) return;
         
-        if (TakeScreenshots)
+        int sleepTime = 50;      
+        
+        if (Config.OutputFormatSeleniumLogViewer)
         {
-            Screenshot();
-        }
-
-        int sleepTime = 50;
-        _MessageSettings.MessageStr = msg;
-        String StrToWrite = _MessageSettings.FormMessageString();
-        while (true) {
-            try (FileWriter out = new FileWriter(_LogFilePath, true)) {
-                out.append(StrToWrite + "\n");
-                if (_MessageSettings.indentModel.getEmptyTree())
-                    _MessageSettings.indentModel.setEmptyTree(false);
-                break;
-            } catch (IOException ex) {
-                System.err.println("..... Exception: File locked. Message - " + ex.getMessage());
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException ex1) { }
-                sleepTime *= 2;
-                if (sleepTime > 50000) {
-                    System.err.println("File lock timeout. WriteLine() failed");
-                    break;
-                }
-            }
-        }
-    }
-    
-    
-    //public void WriteLine(String msg) {
-    //    WriteLine(msg, false);
-    //}
-    
+	        while (true) 
+	        {	        	
+	        	try (FileWriter out = new FileWriter(Config.OutputFormatSeleniumLogViewer_Filepath, true))
+	        	{		            	
+	                if (TakeScreenshots)
+	                {
+	                    Screenshot();
+	                }	
+	               
+	                _MessageSettings1.MessageStr = msg;
+	                String StrToWrite = _MessageSettings1.FormMessageString(true);
+	                out.append(StrToWrite + "\n");
+	                if (_MessageSettings1.indentModel.getEmptyTree())
+	                    _MessageSettings1.indentModel.setEmptyTree(false);
+	                
+	                break;		                
+	        	}
+	        	catch (IOException ex) {
+	        		System.err.println("..... Exception: File " + Config.OutputFormatSeleniumLogViewer_Filepath + " locked. Message - " + ex.getMessage());
+	                try {
+	                    Thread.sleep(sleepTime);
+	                } catch (InterruptedException ex1) { }
+	                sleepTime *= 2;
+	                if (sleepTime > 50000) {
+	                    System.err.println("File lock timeout. WriteLine() failed");
+	                    break;
+	                }
+	        	}
+	          }
+         }
+        
+        if (Config.OutputFormatText)
+        {
+	        while (true) 
+	        {	        	
+	        	try (FileWriter out = new FileWriter(Config.OutputFormatText_Filepath, true))
+	        	{		            	
+                    _MessageSettings2.MessageStr = msg;
+                    String StrToWrite = _MessageSettings2.FormMessageString(false);
+                    out.append(StrToWrite + "\n");
+                    if (_MessageSettings2.indentModel.getEmptyTree())
+                        _MessageSettings2.indentModel.setEmptyTree(false);
+	                
+	                break;		                
+	        	}
+	        	catch (IOException ex) {
+	        		System.err.println("..... Exception: File " + Config.OutputFormatText_Filepath + " locked. Message - " + ex.getMessage());
+	                try {
+	                    Thread.sleep(sleepTime);
+	                } catch (InterruptedException ex1) { }
+	                sleepTime *= 2;
+	                if (sleepTime > 50000) {
+	                    System.err.println("File lock timeout. WriteLine() failed");
+	                    break;
+	                }
+	        	}
+	         }
+         }
+        
+        if (Config.OutputFormatConsole)
+        {
+            _MessageSettings3.MessageStr = msg;
+            String StrToWrite = _MessageSettings3.FormMessageString(false);
+            System.out.println(StrToWrite); 
+            if (_MessageSettings3.indentModel.getEmptyTree())
+                _MessageSettings3.indentModel.setEmptyTree(false);
+        }         
+     } 
+   
 
     /// <summary>
     /// Write msg string to file.
@@ -368,7 +442,7 @@ public final class SeleniumLog {
     public void Fatal(String msg)
     {
         Red().Fatal();
-        if (Config.RichTextOutput)
+        if (Config.OutputFormatSeleniumLogViewer)
             msg = "FATAL - " + msg;
         WriteLine(msg, false, Config.TakeScreenshotOnEveryFatal);
     }
@@ -411,13 +485,17 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog DisplayLineNumbers()
     {
-        _MessageSettings.ShowLineNumbers = true;
+        _MessageSettings1.ShowLineNumbers = true;
+        _MessageSettings2.ShowLineNumbers = true;
+        _MessageSettings3.ShowLineNumbers = true;
         return this;
     }
 
     public SeleniumLog RemoveLineNumbers()
     {
-        _MessageSettings.ShowLineNumbers = false;
+        _MessageSettings1.ShowLineNumbers = false;
+        _MessageSettings2.ShowLineNumbers = false;
+        _MessageSettings3.ShowLineNumbers = false;
         return this;
     }
     
@@ -427,9 +505,9 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Indent()
     {
-        _MessageSettings.Indent = _MessageSettings.Indent + 1;
-        //MessageSettings.RunningIndentLevel++;
-        //MessageSettings.CalculatePendingLevel();
+        _MessageSettings1.Indent = _MessageSettings1.Indent + 1;
+        _MessageSettings2.Indent = _MessageSettings2.Indent + 1;
+        _MessageSettings3.Indent = _MessageSettings3.Indent + 1;
         return this;
     }
     
@@ -440,17 +518,18 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog IndentTo(int SetLevel)
     {
-        int Delta = SetLevel - _MessageSettings.CurrentIndentLevel();
+        int Delta = SetLevel - _MessageSettings1.CurrentIndentLevel();
         if (Delta > 0)
         {
-            _MessageSettings.Indent = 0;
-            _MessageSettings.Unindent = 0;
-            _MessageSettings.Indent++;
+            _MessageSettings1.Indent = 0;  _MessageSettings1.Unindent = 0;  _MessageSettings1.Indent++;
+            _MessageSettings2.Indent = 0;  _MessageSettings2.Unindent = 0;  _MessageSettings2.Indent++;
+            _MessageSettings3.Indent = 0;  _MessageSettings3.Unindent = 0;  _MessageSettings3.Indent++;
         }
         else
         {
-            _MessageSettings.Indent = 0;
-            _MessageSettings.Unindent = 0;
+            _MessageSettings1.Indent = 0;  _MessageSettings1.Unindent = 0;
+            _MessageSettings2.Indent = 0;  _MessageSettings2.Unindent = 0;
+            _MessageSettings3.Indent = 0;  _MessageSettings3.Unindent = 0;
             Unindent(Math.abs(Delta));
         }
         return this;
@@ -463,10 +542,12 @@ public final class SeleniumLog {
     /// <returns></returns>
     public void Indent(boolean WriteNow)
     {
-        _MessageSettings.Indent++;
+        _MessageSettings1.Indent++;
+        _MessageSettings2.Indent++;
+        _MessageSettings3.Indent++;
         if (WriteNow)
         {
-            String StrToWrite = _MessageSettings.FormMessageString();
+            String StrToWrite = _MessageSettings1.FormMessageString(true);
             WriteLine(StrToWrite, false);
         }
     }
@@ -477,8 +558,12 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Unindent()
     {
-        if ((_MessageSettings.CurrentIndentLevel() - 1) >= 0)
-            _MessageSettings.Unindent = _MessageSettings.Unindent + 1;
+        if ((_MessageSettings1.CurrentIndentLevel() - 1) >= 0)
+        {
+            _MessageSettings1.Unindent = _MessageSettings1.Unindent + 1;
+            _MessageSettings2.Unindent = _MessageSettings2.Unindent + 1;
+            _MessageSettings3.Unindent = _MessageSettings3.Unindent + 1;            
+        }
         return this;
     }
     
@@ -503,10 +588,12 @@ public final class SeleniumLog {
     /// <returns></returns>
     public void Unindent(boolean WriteNow)
     {
-        _MessageSettings.Unindent++;
+        _MessageSettings1.Unindent++;
+        _MessageSettings2.Unindent++;
+        _MessageSettings3.Unindent++;
         if (WriteNow)
         {
-            String StrToWrite = _MessageSettings.FormMessageString();
+            String StrToWrite = _MessageSettings1.FormMessageString(true);
             WriteLine(StrToWrite, false);
         }
     }
@@ -528,7 +615,9 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Root()
     {
-        _MessageSettings.Root = true;
+        _MessageSettings1.Root = true;
+        _MessageSettings2.Root = true;
+        _MessageSettings3.Root = true;
         return this;
     }
     
@@ -539,10 +628,12 @@ public final class SeleniumLog {
     /// <returns></returns>
     public void Root(boolean WriteNow)
     {
-        _MessageSettings.Root = true;
+        _MessageSettings1.Root = true;
+        _MessageSettings2.Root = true;
+        _MessageSettings3.Root = true;
         if (WriteNow)
         {
-            String StrToWrite = _MessageSettings.FormMessageString();
+            String StrToWrite = _MessageSettings1.FormMessageString(true);
             WriteLine(StrToWrite, false);
         }
     }
@@ -553,15 +644,17 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog WatchdogStart()
     {
-        _MessageSettings.WatchdogStart = true;
-        boolean containsItem = wdlist.contains(_MessageSettings.CurrentIndentLevel());
+        _MessageSettings1.WatchdogStart = true;
+        _MessageSettings2.WatchdogStart = true;
+        _MessageSettings3.WatchdogStart = true;
+        boolean containsItem = wdlist.contains(_MessageSettings1.CurrentIndentLevel());
         if (containsItem)
         {
             WriteLine(">>>>>>>>>> wdlist already contains this indentation level!", false);
         }
         else
         {
-            wdlist.add(_MessageSettings.CurrentIndentLevel());
+            wdlist.add(_MessageSettings1.CurrentIndentLevel());
         }
         return this;
     }
@@ -573,10 +666,12 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog WatchdogStart(boolean WriteNow)
     {
-        _MessageSettings.WatchdogStart = true;
+        _MessageSettings1.WatchdogStart = true;
+        _MessageSettings2.WatchdogStart = true;
+        _MessageSettings3.WatchdogStart = true;
         if (WriteNow)
         {
-            String StrToWrite = _MessageSettings.FormMessageString();
+            String StrToWrite = _MessageSettings1.FormMessageString(true);
             WriteLine(StrToWrite, false);
             return null;
         }
@@ -592,11 +687,15 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog WatchdogEnd()
     {
-        _MessageSettings.WatchdogEnd = true;
-        boolean containsItem = wdlist.contains(_MessageSettings.CurrentIndentLevel());
+        _MessageSettings1.WatchdogEnd = true;
+        _MessageSettings2.WatchdogEnd = true;
+        _MessageSettings3.WatchdogEnd = true;
+        boolean containsItem = wdlist.contains(_MessageSettings1.CurrentIndentLevel());
         if (containsItem)
         {
-            _MessageSettings.WatchdogEnd = true;
+            _MessageSettings1.WatchdogEnd = true;
+            _MessageSettings2.WatchdogEnd = true;
+            _MessageSettings3.WatchdogEnd = true;
         }
         else
         {
@@ -611,10 +710,12 @@ public final class SeleniumLog {
     /// <returns>SeleniumLog object</returns>
     public SeleniumLog WatchdogEnd(boolean WriteNow)
     {
-        _MessageSettings.WatchdogEnd = true;
+        _MessageSettings1.WatchdogEnd = true;
+        _MessageSettings2.WatchdogEnd = true;
+        _MessageSettings3.WatchdogEnd = true;
         if (WriteNow)
         {
-            String StrToWrite = _MessageSettings.FormMessageString();
+            String StrToWrite = _MessageSettings1.FormMessageString(true);
             WriteLine(StrToWrite, false);
             return null;
         }
@@ -632,7 +733,9 @@ public final class SeleniumLog {
     public SeleniumLog Debug()
     {
         Gray();
-        _MessageSettings.Debug = true;
+        _MessageSettings1.Debug = true;
+        _MessageSettings2.Debug = true;
+        _MessageSettings3.Debug = true;
         return this;
     }
 
@@ -643,7 +746,9 @@ public final class SeleniumLog {
     public SeleniumLog Pass()
     {
         Green();
-        _MessageSettings.Pass = true;
+        _MessageSettings1.Pass = true;
+        _MessageSettings2.Pass = true;
+        _MessageSettings3.Pass = true;
         return this;
     }
 
@@ -654,7 +759,9 @@ public final class SeleniumLog {
     public SeleniumLog Fail()
     {
         Red();
-        _MessageSettings.Fail = true;
+        _MessageSettings1.Fail = true;
+        _MessageSettings2.Fail = true;
+        _MessageSettings3.Fail = true;
         return this;
     }
     
@@ -664,7 +771,9 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Warning()
     {
-        _MessageSettings.Warning = true;
+        _MessageSettings1.Warning = true;
+        _MessageSettings2.Warning = true;
+        _MessageSettings3.Warning = true;
         return this;
     }
 
@@ -674,7 +783,9 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Error()
     {
-        _MessageSettings.Error = true;
+        _MessageSettings1.Error = true;
+        _MessageSettings2.Error = true;
+        _MessageSettings3.Error = true;
         return this;
     }
     
@@ -684,7 +795,9 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Fatal()
     {
-        _MessageSettings.Error = true;
+        _MessageSettings1.Error = true;
+        _MessageSettings2.Error = true;
+        _MessageSettings3.Error = true;
         return this;
     }
     
@@ -696,7 +809,9 @@ public final class SeleniumLog {
     /// <param name="blue">between 0 - 255</param>
     /// <returns></returns>
    public SeleniumLog RGB(int red, int green, int blue) {
-        _MessageSettings.RGB = new Color(red, green, blue);	   
+        _MessageSettings1.RGB = new Color(red, green, blue);	   
+        _MessageSettings2.RGB = new Color(red, green, blue);	   
+        _MessageSettings3.RGB = new Color(red, green, blue);	   
         return this;
     }
     
@@ -707,7 +822,9 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog AttachPicture(String PicturePath)
     {
-        _MessageSettings.Image = PicturePath;
+        _MessageSettings1.Image = PicturePath;
+        _MessageSettings2.Image = PicturePath;
+        _MessageSettings3.Image = PicturePath;
         return this;
     }
 
@@ -718,7 +835,9 @@ public final class SeleniumLog {
     /// <returns></returns>
     private SeleniumLog AttachFile(String FilePath)
     {
-        _MessageSettings.File = FilePath;
+        _MessageSettings1.File = FilePath;
+        _MessageSettings2.File = FilePath;
+        _MessageSettings3.File = FilePath;
         return this;
     }
     
@@ -734,10 +853,12 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Path(String PathStr, boolean WriteNow)
     {
-        _MessageSettings.Path = PathStr;
+        _MessageSettings1.Path = PathStr;
+        _MessageSettings2.Path = PathStr;
+        _MessageSettings3.Path = PathStr;
         if (WriteNow)
         {
-            String StrToWrite = _MessageSettings.FormMessageString();
+            String StrToWrite = _MessageSettings1.FormMessageString(true);
             WriteLine(StrToWrite, false);
             return null;
         }
@@ -765,10 +886,12 @@ public final class SeleniumLog {
     /// <returns></returns>
     public SeleniumLog Tab(String TabStr, boolean WriteNow)
     {
-        _MessageSettings.Tab = TabStr;
+        _MessageSettings1.Tab = TabStr;
+        _MessageSettings2.Tab = TabStr;
+        _MessageSettings3.Tab = TabStr;
         if (WriteNow)
         {
-            String StrToWrite = _MessageSettings.FormMessageString();
+            String StrToWrite = _MessageSettings1.FormMessageString(true);
             WriteLine(StrToWrite, false);
             return null;
         }
@@ -785,7 +908,9 @@ public final class SeleniumLog {
     /// <returns></returns>
     private SeleniumLog TimestampFormat(String Format)
     {
-        _MessageSettings.TimestampFormat = Format;
+        _MessageSettings1.TimestampFormat = Format;
+        _MessageSettings2.TimestampFormat = Format;
+        _MessageSettings3.TimestampFormat = Format;
         return this;
     }
     
@@ -858,7 +983,7 @@ public final class SeleniumLog {
             // user sets the config to true in the SeleniumLog.config, but has not set the Selenium Webdriver pointer.
             try
             {
-                String PICTURE_PATH = Config.ScreenshotsFolder + "/" + GetUniqueFilename("jpg");
+                String PICTURE_PATH = Config.OutputFormatSeleniumLogViewer_Screenshots + "/" + GetUniqueFilename("jpg");
 
                 if (Config.UseFastScreenshot)
                 {
@@ -869,7 +994,7 @@ public final class SeleniumLog {
                 	File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
                 	FileUtils.copyFile(scrFile, new File(PICTURE_PATH));
                 }
-                _MessageSettings.Image = PICTURE_PATH;
+                _MessageSettings1.Image = PICTURE_PATH;
             }
             catch (WebDriverException | IOException | AWTException e)
             {
@@ -1027,7 +1152,7 @@ public final class SeleniumLog {
         printParameters.PrintValues(arg, comment);
         log.RestoreIndent("ExploreParams");
         //log.MessageSettings.indentModel.SimulateIndentations(MessageSettings.MessageStr);
-        log._MessageSettings.GetPendingLevel();
+        log._MessageSettings1.GetPendingLevel();
     }
 
 }

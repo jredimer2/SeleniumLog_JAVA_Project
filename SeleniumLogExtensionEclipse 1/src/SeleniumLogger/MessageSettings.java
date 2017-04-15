@@ -163,7 +163,7 @@ public class MessageSettings
     }
     
     @SuppressWarnings("unchecked")
-	public String FormMessageString()
+	public String FormMessageString(boolean RICH_TEXT)
     {
         Stack MessageStack = new Stack();
         String ReturnString = "";
@@ -329,7 +329,7 @@ public class MessageSettings
 
         if (EnableLogging) indentModel.SimulateIndentations(ReturnString);
 
-        if (!config.RichTextOutput)
+        if (RICH_TEXT)
         {
             for (int i = 0; i < indentModel.getCurrentLevel(); i++)
             {

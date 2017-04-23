@@ -8,11 +8,12 @@ public class Main {
 		// TODO Auto-generated method stub
 		System.out.println("Hello world");
 		SeleniumLog log = SeleniumLog.Instance();
-		//log.Info("line 1");
-		//log.Info("line 2");
+		log.Info("line 1");
+		log.Info("line 2");
 		
 		//ExampleInstantiationsTest test = new ExampleInstantiationsTest();
 		//test.runtests();
+                System.out.println("test complete!");
 	}
 
 }

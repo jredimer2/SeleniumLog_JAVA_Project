@@ -177,6 +177,19 @@ public final class XmlConfigurationClass {
         }
     }
     
+    private String getOptionName(NamedNodeMap attrs) {
+        try {
+            //for (int i=0; i < attrs.getLength(); i++) {
+            //    if (attrs.item(i).getNodeValue() == "option")
+            //        return "option";
+            Node node = attrs.getNamedItem("option");
+            return node.getNodeValue();
+
+        }
+        catch (Exception e) {
+            throw e;
+        }
+    }
     private void traverse(NodeList rootNode){
         try {
             for (int index = 0; index < rootNode.getLength(); index ++){
@@ -186,7 +199,7 @@ public final class XmlConfigurationClass {
                     if (childNodes.getLength() > 0){
                         NamedNodeMap attrs = aNode.getAttributes();
                         if ((attrs != null) && (attrs.getLength() > 0)) {
-                            String attr = attrs.item(0).getNodeValue();
+                            String attr = getOptionName(attrs);
                             String val = aNode.getFirstChild().getNodeValue();
                             System.out.println(aNode.getNodeName() + ", ATTRIB [" + attr + "]");
                             switch (attr) {

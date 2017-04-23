@@ -155,6 +155,7 @@ public final class SeleniumLog {
     
 
     private static SeleniumLog instance = null;
+    
     public static SeleniumLog Instance() {
         return Instance(null, true, false);
     }
@@ -162,7 +163,7 @@ public final class SeleniumLog {
     public static SeleniumLog Instance(WebDriver webdriver) {
         return Instance(webdriver, true, false);
     }
-    
+  
     public static SeleniumLog Instance(WebDriver webdriver, boolean overwrite, boolean debug) {
         if (instance == null)
         {

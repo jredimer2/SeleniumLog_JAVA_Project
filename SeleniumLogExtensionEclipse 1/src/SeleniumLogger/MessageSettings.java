@@ -329,7 +329,7 @@ public class MessageSettings
 
         if (EnableLogging) indentModel.SimulateIndentations(ReturnString);
 
-        if (RICH_TEXT)
+        if (!RICH_TEXT)
         {
             for (int i = 0; i < indentModel.getCurrentLevel(); i++)
             {
